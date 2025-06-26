@@ -1,0 +1,29 @@
+# COMP90024 Team 75 
+# Linying Wei (1638206)
+# Wangyang Wu (1641248)
+# Ziyu Wang (1560831)
+# Roger Zhang (1079986)
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shared-data-reddit
+  namespace: default
+data:
+  # Elasticsearch credentials
+  ES_USERNAME: elastic
+  ES_PASSWORD: elastic
+
+  # Reddit API credentials
+  REDDIT_CLIENT_ID: Sm5Hyq-3pIgg_Gqb9RLmOQ
+  REDDIT_CLIENT_SECRET: 7cCKB5Eonz91RloTLAYvXazaG6Osbg
+  REDDIT_USER_AGENT: HousingSentimentBot/0.1 by u/Emotional-Exam-3670
+
+  # Redis settings
+  REDIS_HOST: redis-master.redis.svc.cluster.local
+  REDIS_PORT: "6379"
+  REDIS_PASSWORD: "redis"
+
+  # Redis stream settings
+  STREAM_NAME: reddit_harvest_stream
+  CONSUMER_GROUP: reddit_harvesters

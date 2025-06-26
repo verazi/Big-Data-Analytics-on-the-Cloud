@@ -1,0 +1,62 @@
+# COMP90024 Team 75 
+# Linying Wei (1638206)
+# Wangyang Wu (1641248)
+# Ziyu Wang (1560831)
+# Roger Zhang (1079986)
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: reddit-task-producer-historical
+  namespace: default
+spec:
+  schedule: "*/15 * * * *"  
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          imagePullSecrets:
+            - name: regcred
+          containers:
+            - name: task-producer-historical
+              image: docker.io/linyingwei01/reddit-task-producer:0.7  
+              command: ["python", "/app/task_producer.py"]
+              volumeMounts:
+                - name: shared-config
+                  mountPath: /configs/default/shared-data-reddit
+                  readOnly: true
+              resources:
+                requests:
+                  memory: "128Mi"
+                  cpu: "100m"
+                limits:
+                  memory: "256Mi"
+                  cpu: "200m"
+              env:
+                - name: COLLECTION_MODE
+                  value: "historical"  
+          volumes:
+            - name: shared-config
+              configMap:
+                name: shared-data-reddit
+                items:
+                  - key: REDIS_HOST
+                    path: REDIS_HOST
+                  - key: REDIS_PORT
+                    path: REDIS_PORT
+                  - key: REDIS_PASSWORD
+                    path: REDIS_PASSWORD
+                  - key: STREAM_NAME
+                    path: STREAM_NAME
+                  - key: CONSUMER_GROUP
+                    path: CONSUMER_GROUP
+                  - key: ES_USERNAME
+                    path: ES_USERNAME
+                  - key: ES_PASSWORD
+                    path: ES_PASSWORD
+                  - key: REDDIT_CLIENT_ID
+                    path: REDDIT_CLIENT_ID
+                  - key: REDDIT_CLIENT_SECRET
+                    path: REDDIT_CLIENT_SECRET
+          restartPolicy: OnFailure
+      backoffLimit: 3

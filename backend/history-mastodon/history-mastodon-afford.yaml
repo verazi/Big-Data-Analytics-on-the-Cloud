@@ -1,0 +1,46 @@
+# COMP90024 Team 75 
+# Linying Wei (1638206)
+# Wangyang Wu (1641248)
+# Ziyu Wang (1560831)
+# Roger Zhang (1079986)
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: history-mastodon-afford
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      imagePullSecrets:
+      - name: regcred
+      restartPolicy: OnFailure
+      containers:
+      - name: history-mastodon-afford
+        image: docker.io/linyingwei01/history-mastodon:0.1
+        command: ["python", "/app/historical_harvester.py"]
+        args: ["--tags","affordability",
+               "--start-year","2019","--end-year","2024",
+               "--batch-size","200"]
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "512Mi"
+          limits:
+            cpu: "500m"
+            memory: "1Gi"
+        volumeMounts:
+        - name: shared-data
+          mountPath: /configs/default/shared-data
+          readOnly: true
+      volumes:
+      - name: shared-data
+        configMap:
+          name: shared-data
+          items:
+          - key: MASTODON_ACCESS_TOKEN
+            path: MASTODON_ACCESS_TOKEN
+          - key: ES_USERNAME
+            path: ES_USERNAME
+          - key: ES_PASSWORD
+            path: ES_PASSWORD
