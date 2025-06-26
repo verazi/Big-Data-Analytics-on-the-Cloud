@@ -1,0 +1,34 @@
+# COMP90024 Team 75 
+# Linying Wei (1638206)
+# Wangyang Wu (1641248)
+# Ziyu Wang (1560831)
+# Roger Zhang (1079986)
+
+version: '3.8'
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    container_name: es_housing
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+    networks:
+      - housing-net
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.0
+    container_name: kibana_housing
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    networks:
+      - housing-net
+
+networks:
+  housing-net:
+    driver: bridge
