@@ -5,13 +5,6 @@
 ## Project Overview
 This project collects, analyzes, and visualizes data from Reddit and Mastodon platforms, using ElasticSearch/Kibana as the data storage and query backend. It supports both local development testing and deployment to Fission cloud functions.
 
-## Team Member
-- Linying Wei - 1638206
-- Ziyu Wang - 1560831
-- Wangyang Wu - 1641248
-- Roger Zhang - 1079986
-- Ben Sampson - 1269494
-
 ## Repository Structure
 
 ```
